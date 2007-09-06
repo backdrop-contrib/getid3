@@ -1,0 +1,40 @@
+<?php
+// $Id$
+
+/*
+ * Implementation of hook_requirements()
+ */
+function getid3_requirements($phase) {
+  $t = get_t();
+  
+  // Test getID3 version 
+  $requirements['getid3'] = array( 
+    'title' => $t('getID3()'),
+  );
+  
+  if (!file_exists(realpath(dirname(__FILE__) . '/getid3/getid3/getid3.php'))) { 
+    $requirements['getid3']['value'] = $t('Not found or wrong version');
+    $requirements['getid3']['description'] = $t('You must install <a href="@getid3">getID3()</a> to %getid3dir.', array('@getid3' => 'http://www.getid3.org', '%getid3dir' => drupal_get_path('module', 'getid3') .'/getid3'));
+    $requirements['getid3']['severity'] = REQUIREMENT_ERROR; 
+  }
+  else {
+    getid3_load();
+    $requirements['getid3']['value'] = GETID3_VERSION;
+  }
+  
+  return $requirements;
+}
+
+/**
+ * Loads the getID3 library
+ */
+function getid3_load() {
+  @(include_once('getid3/getid3/getid3.php')) or _getid3_library_not_found();
+}
+
+/**
+ * Let the user know that the getID3 PHP library is not installed
+ */
+function _getid3_library_not_found() {
+  drupal_set_message(t('The <a href="@getid3">getID3()</a> library was not found. Please install it into %getid3dir.', array('@getid3' => 'http://www.getid3.org', '%getid3dir' => drupal_get_path('module', 'getid3') .'/getid3')), 'error');
+}
