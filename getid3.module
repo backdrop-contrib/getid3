@@ -26,15 +26,39 @@ function getid3_requirements($phase) {
 }
 
 /**
- * Loads the getID3 library
+ * Loads the getID3 library.
  */
 function getid3_load() {
   @(include_once('getid3/getid3/getid3.php')) or _getid3_library_not_found();
 }
 
 /**
- * Let the user know that the getID3 PHP library is not installed
+ * Let the user know that the getID3 PHP library is not installed.
  */
 function _getid3_library_not_found() {
   drupal_set_message(t('The <a href="@getid3">getID3()</a> library was not found. Please install it into %getid3dir.', array('@getid3' => 'http://www.getid3.org', '%getid3dir' => drupal_get_path('module', 'getid3') .'/getid3')), 'error');
+}
+
+/**
+ * Create and initialize an instance of getID3 class.
+ */
+function &getid3_instance() {
+  getid3_load();
+  $id3 = new getID3();
+  $id3-> option_md5_data = true;
+  $id3-> option_md5_data_source = true;
+  $id3-> encoding = 'UTF-8';
+  return $id3;
+}
+
+/**
+ * Analyze file and return its media information.
+ */
+function &getid3_analyze($path) {
+  $info = array();
+  if($id3 = &getid3_instance()) {
+    $info = $id3-> analyze($path);
+    unset($id3);
+  }
+  return $info;
 }

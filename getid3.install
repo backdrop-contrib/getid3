@@ -1,0 +1,10 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_enable()
+ */ 
+function getid3_enable() {
+  // Display a message if it fails to load getID3().
+  getid3_load();
+}
