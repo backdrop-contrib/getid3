@@ -8,3 +8,11 @@ function getid3_enable() {
   // Display a message if it fails to load getID3().
   getid3_load();
 }
+
+/**
+ * Implementation of hook_uninstall()
+ */ 
+function getid3_uninstall() {
+  db_query("DELETE FROM {variable} WHERE name LIKE 'getid3_%'");
+  cache_clear_all('variables', 'cache');
+}

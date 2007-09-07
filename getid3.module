@@ -12,31 +12,38 @@ function getid3_requirements($phase) {
     'title' => $t('getID3()'),
   );
   
-  if (!file_exists(realpath(dirname(__FILE__) . '/getid3/getid3/getid3.php'))) { 
+  if (!file_exists(getid3_get_path() .'/getid3/getid3.php')) { 
     $requirements['getid3']['value'] = $t('Not found or wrong version');
     $requirements['getid3']['description'] = $t('You must install <a href="@getid3">getID3()</a> to %getid3dir.', array('@getid3' => 'http://www.getid3.org', '%getid3dir' => drupal_get_path('module', 'getid3') .'/getid3'));
     $requirements['getid3']['severity'] = REQUIREMENT_ERROR; 
   }
   else {
-    getid3_load();
-    $requirements['getid3']['value'] = GETID3_VERSION;
+    $requirements['getid3']['value'] = check_plain(getid3_get_version());
   }
   
   return $requirements;
 }
 
 /**
- * Loads the getID3 library.
+ * Loads the getID3 library once and returns whether it was successfully loaded.
+ *  
+ * @return
+ *   Boolean indicating if the library was loaded 
  */
 function getid3_load() {
-  @(include_once('getid3/getid3/getid3.php')) or _getid3_library_not_found();
+  @(include_once(getid3_get_path() .'/getid3/getid3.php')) or _getid3_library_not_found();
+  $version = GETID3_VERSION;
+  return !empty($version);
 }
 
 /**
  * Let the user know that the getID3 PHP library is not installed.
  */
 function _getid3_library_not_found() {
-  drupal_set_message(t('The <a href="@getid3">getID3()</a> library was not found. Please install it into %getid3dir.', array('@getid3' => 'http://www.getid3.org', '%getid3dir' => drupal_get_path('module', 'getid3') .'/getid3')), 'error');
+  global $_getid3_library_not_found_displayed;
+  if ($_getid3_library_not_found_displayed = TRUE) {
+    drupal_set_message(t('The <a href="@getid3">getID3()</a> library was not found. Please install it into %getid3dir.', array('@getid3' => 'http://www.getid3.org', '%getid3dir' => drupal_get_path('module', 'getid3') .'/getid3')), 'error');
+  }
 }
 
 /**
@@ -61,4 +68,78 @@ function &getid3_analyze($path) {
     unset($id3);
   }
   return $info;
+}
+
+/**
+ * Implementation of hook_menu()
+ */ 
+function getid3_menu($may_cache) {
+  $items = array();
+  if ($may_cache) {
+    $items[] = array(
+      'path' => 'admin/settings/getid3',
+      'title' => t('getID3()'),
+      'description' => t('Configure settings associated with getID3().'),
+      'callback' => 'drupal_get_form',
+      'callback arguments' => array('getid3_admin_settings'),
+      'access' => user_access('administer site configuration'),
+      'type' => MENU_NORMAL_ITEM
+    );
+  }
+  return $items;
+}
+
+/**
+ * Administration settings for getID3().
+ */ 
+function getid3_admin_settings() {
+  $form['getid3_path'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Path'),
+    '#default_value' => getid3_get_path(),
+    '#description' => t('The location where getID3() is installed. Relative paths are from the Drupal root directory.'),
+    '#after_build'=> array('_getid3_admin_settings_check_path'),
+  );
+  $form['getid3_show_warnings'] = array(
+    '#type' => 'checkbox',
+    '#title' => t("Display Warnings"),
+    '#default_value' => variable_get('getid3_show_warnings', FALSE),
+    '#description' => t("Check this to display the warning messages from the getID3 library when reading and writing ID3 tags. Generally it's a good idea to leave this unchecked, getID3 reports warnings for several trivial problems and the warnings can be confusing to users. This setting can be useful when debugging problems with the ID3 tags."),
+  );
+  return system_settings_form($form);
+}
+
+/**
+ * Checks the that the directory in $form_element exists and contains a file
+ * named 'getid3.php'. If validation fails, the form element is flagged with an
+ * error from within the file_check_directory function. See:
+ * system_check_directory()
+ *
+ * @param $form_element
+ *   The form element containing the name of the directory to check.
+ */
+function _getid3_admin_settings_check_path($form_element) {
+  $path = $form_element['#value'];
+  if (!is_dir($path) || !file_exists($path .'/getid3/getid3.php')) {
+    form_set_error($form_element['#parents'][0], t('The <a href="@getid3" target="_blank">getID3 PHP library</a> could not be found in %path.', array('@url' => 'http://www.getid3.org', '%path' => $path)));
+  }
+  else {
+    $form_element['#description'] .= t(' <strong>Version %version found</strong>.', array('%version' => getid3_get_version()));
+  }
+  return $form_element;
+}
+
+/**
+ * Returns the path where getID3() is installed.
+ */ 
+function getid3_get_path() {
+  return variable_get('getid3_path', drupal_get_path('module', 'getid3') .'/getid3');
+}
+
+/**
+ * Returns the version number of getID3() that's installed.
+ */
+function getid3_get_version() {
+  getid3_load();
+  return GETID3_VERSION;
 }
