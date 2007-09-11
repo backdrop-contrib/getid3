@@ -12,13 +12,18 @@ function getid3_requirements($phase) {
     'title' => $t('getID3()'),
   );
   
-  if (!file_exists(getid3_get_path() .'/getid3/getid3.php')) { 
+  $getid3_path = getid3_get_path();
+  if (!file_exists($getid3_path .'/getid3/getid3.php')) { 
     $requirements['getid3']['value'] = $t('Not found or wrong version');
-    $requirements['getid3']['description'] = $t('You must install <a href="@getid3">getID3()</a> to %getid3dir.', array('@getid3' => 'http://www.getid3.org', '%getid3dir' => drupal_get_path('module', 'getid3') .'/getid3'));
+    $requirements['getid3']['description'] = $t('You must install <a href="@getid3">getID3()</a> to %getid3dir, or <a href="@getid3settings">configure its installation path</a>.', array('@getid3' => 'http://www.getid3.org', '%getid3dir' => drupal_get_path('module', 'getid3') .'/getid3', '@getid3settings' => url('admin/settings/getid3')));
     $requirements['getid3']['severity'] = REQUIREMENT_ERROR; 
   }
   else {
     $requirements['getid3']['value'] = check_plain(getid3_get_version());
+    if (file_exists($getid3_path .'/demos')) {
+      $requirements['getid3']['description'] = $t("Your getID3 library is insecure. The demos distributed with getID3 contain code which can create a security holes. Please remove the demos directory (%path).", array('%path' => $getid3_path .'/demos'));
+      $requirements['getid3']['severity'] = REQUIREMENT_WARNING; 
+    }
   }
   
   return $requirements;
@@ -30,8 +35,8 @@ function getid3_requirements($phase) {
  * @return
  *   Boolean indicating if the library was loaded 
  */
-function getid3_load() {
-  @(include_once(getid3_get_path() .'/getid3/getid3.php')) or _getid3_library_not_found();
+function getid3_load($display_warning = TRUE) {
+  @(include_once(getid3_get_path() .'/getid3/getid3.php')) or _getid3_library_not_found($display_warning);
   $version = GETID3_VERSION;
   return !empty($version);
 }
@@ -39,9 +44,9 @@ function getid3_load() {
 /**
  * Let the user know that the getID3 PHP library is not installed.
  */
-function _getid3_library_not_found() {
+function _getid3_library_not_found($display_warning = TRUE) {
   global $_getid3_library_not_found_displayed;
-  if ($_getid3_library_not_found_displayed = TRUE) {
+  if ($_getid3_library_not_found_displayed = TRUE && $display_warning) {
     drupal_set_message(t('The <a href="@getid3">getID3()</a> library was not found. Please install it into %getid3dir.', array('@getid3' => 'http://www.getid3.org', '%getid3dir' => drupal_get_path('module', 'getid3') .'/getid3')), 'error');
   }
 }
@@ -140,6 +145,6 @@ function getid3_get_path() {
  * Returns the version number of getID3() that's installed.
  */
 function getid3_get_version() {
-  getid3_load();
+  getid3_load(FALSE);
   return GETID3_VERSION;
 }
