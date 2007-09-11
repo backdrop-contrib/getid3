@@ -10,6 +10,20 @@ function getid3_enable() {
 }
 
 /**
+ * Implementation of hook_install().
+ */
+function getid3_install() {
+  $status = array();
+   // Set module weight for the getID3 module
+  $status[] = db_query("UPDATE {system} SET weight = -10 WHERE name = 'getid3'");
+
+  // If there is one FALSE value in the status array, there was an error.
+  if (array_search(FALSE, $status) !== FALSE) {
+    drupal_set_message(t('Setting the module weight of getID3 failed.'), 'error');
+  }
+}
+
+/**
  * Implementation of hook_uninstall()
  */ 
 function getid3_uninstall() {
