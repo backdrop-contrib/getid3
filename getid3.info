@@ -1,3 +1,0 @@
-; $Id$
-name = "getID3()"
-description = "getID3() extracts useful information from multimedia file formats."
