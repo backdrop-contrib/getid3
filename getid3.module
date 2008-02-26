@@ -126,7 +126,7 @@ function getid3_admin_settings() {
 function _getid3_admin_settings_check_path($form_element) {
   $path = $form_element['#value'];
   if (!is_dir($path) || !file_exists($path .'/getid3/getid3.php')) {
-    form_set_error($form_element['#parents'][0], t('The <a href="@getid3" target="_blank">getID3 PHP library</a> could not be found in %path.', array('@url' => 'http://www.getid3.org', '%path' => $path)));
+    form_set_error($form_element['#parents'][0], t('The !getID3 could not be found in %path.', array('!getID3' => l(t('getID3 PHP library'), 'http://www.getid3.org', array('target' => '_blank')), '%path' => $path)));
   }
   else {
     $form_element['#description'] .= t(' <strong>Version %version found</strong>.', array('%version' => getid3_get_version()));
