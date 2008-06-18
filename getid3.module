@@ -10,7 +10,7 @@ function getid3_help($section, $arg) {
   switch ($section) {
     case 'admin/settings/getid3':
       $help = '<p>'. t("To use this module you'll need to <a href='!download-link'>download the library</a> from the <a href='!info-link'>getID3 website</a> and extract the contents into the  module's getid3 directory. Currently, the recommended version of the getID3 library is %recommended-version.",
-        array('!download-link' => url('http://prdownloads.sourceforge.net/getid3'), '!info-link' => url('http://getid3.org/'), '%recommended-version' => AUDIO_GETID3_RECOMMEND_VERSION)) .'</p>';
+        array('!download-link' => url('http://prdownloads.sourceforge.net/getid3'), '!info-link' => url('http://getid3.org/'), '%recommended-version' => GETID3_RECOMMEND_VERSION)) .'</p>';
       return $help;
   }
 }
@@ -86,13 +86,13 @@ function getid3_menu() {
 /**
  * Administration settings for getID3().
  */ 
-function getid3_admin_settings_form($form, &$form_state) {
+function getid3_admin_settings_form() {
   $form['getid3_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Path'),
     '#default_value' => getid3_get_path(),
     '#description' => t('The location where getID3() is installed. Relative paths are from the Drupal root directory.'),
-    '#after_build'=> array('_getid3_admin_settings_check_path'),
+    '#after_build' => array('_getid3_admin_settings_check_path'),
   );
   if ($version = getid3_get_version(FALSE)) {
     $form['getid3_version'] = array(
