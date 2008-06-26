@@ -17,9 +17,9 @@ function getid3_help($section, $arg) {
 
 /**
  * Loads the getID3 library once and returns whether it was successfully loaded.
- *  
+ *
  * @return
- *   Boolean indicating if the library was loaded 
+ *   Boolean indicating if the library was loaded
  */
 function getid3_load($display_warning = TRUE) {
   $getid3_path = getid3_get_path();
@@ -30,7 +30,7 @@ function getid3_load($display_warning = TRUE) {
       define('GETID3_HELPERAPPSDIR', realpath($getid3_path .'/../helperapps') .'/');
     }
     include_once($getid3_path .'/getid3.php');
-  
+
     // Initialize getID3 tag-writing module. NOTE: Their wanky dependency setup
     // requires that this file must be included AFTER an instance of the getID3
     // class has been instantiated.
@@ -49,11 +49,13 @@ function getid3_load($display_warning = TRUE) {
  * Create and initialize an instance of getID3 class.
  */
 function &getid3_instance() {
-  getid3_load();
-  $id3 = new getID3();
-  $id3->option_md5_data = true;
-  $id3->option_md5_data_source = true;
-  $id3->encoding = 'UTF-8';
+  $id3 = NULL;
+  if (getid3_load()) {
+    $id3 = new getID3();
+    $id3->option_md5_data = true;
+    $id3->option_md5_data_source = true;
+    $id3->encoding = 'UTF-8';
+  }
   return $id3;
 }
 
@@ -71,7 +73,7 @@ function &getid3_analyze($path) {
 
 /**
  * Implementation of hook_menu()
- */ 
+ */
 function getid3_menu() {
   $items['admin/settings/getid3'] = array(
     'title' => 'getID3()',
@@ -85,7 +87,7 @@ function getid3_menu() {
 
 /**
  * Administration settings for getID3().
- */ 
+ */
 function getid3_admin_settings_form() {
   $form['getid3_path'] = array(
     '#type' => 'textfield',
@@ -138,7 +140,7 @@ function _getid3_admin_settings_check_path($form_element) {
 
 /**
  * Returns the path where getID3() is installed.
- */ 
+ */
 function getid3_get_path() {
   return variable_get('getid3_path', drupal_get_path('module', 'getid3') .'/getid3/getid3');
 }
