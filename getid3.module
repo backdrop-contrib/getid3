@@ -52,8 +52,9 @@ function &getid3_instance() {
   $id3 = NULL;
   if (getid3_load()) {
     $id3 = new getID3();
-    $id3->option_md5_data = true;
-    $id3->option_md5_data_source = true;
+    // MD5 is a big performance hit. Disable it by default.
+    $id3->option_md5_data = FALSE;
+    $id3->option_md5_data_source = FALSE; 
     $id3->encoding = 'UTF-8';
   }
   return $id3;
