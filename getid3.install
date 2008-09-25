@@ -14,9 +14,10 @@ function getid3_requirements($phase) {
 
     if (getid3_load(FALSE)) {
       $requirements['getid3']['value'] = check_plain(getid3_get_version());
-      if (file_exists($getid3_path .'/demos')) {
-        $requirements['getid3']['description'] = $t("Your getID3 library is insecure. The demos distributed with getID3 contain code which can create a security holes. Please remove the demos directory (%path).", array('%path' => $getid3_path .'/demos'));
-        $requirements['getid3']['severity'] = REQUIREMENT_WARNING; 
+      $getid3_demos_path = getid3_get_path() .'/../demos';
+      if (file_exists($getid3_demos_path)) {
+        $requirements['getid3']['description'] = $t("Your getID3 library is insecure! The demos distributed with getID3 contains code which creates a huge security hole. Remove the demos directory (%path) from beneth Drupal's directory.", array('%path' => realpath($getid3_demos_path)));
+        $requirements['getid3']['severity'] = REQUIREMENT_ERROR; 
       }
     }
     else {
