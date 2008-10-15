@@ -9,8 +9,8 @@ define('GETID3_RECOMMEND_VERSION', '1.7.8b3');
 function getid3_help($section, $arg) {
   switch ($section) {
     case 'admin/settings/getid3':
-      $help = '<p>'. t("To use this module you'll need to <a href='!download-link'>download the library</a> from the <a href='!info-link'>getID3 website</a> and extract the contents into the  module's getid3 directory. Currently, the recommended version of the getID3 library is %recommended-version.",
-        array('!download-link' => url('http://prdownloads.sourceforge.net/getid3'), '!info-link' => url('http://getid3.org/'), '%recommended-version' => GETID3_RECOMMEND_VERSION)) .'</p>';
+      $help = '<p>' . t("To use this module you'll need to <a href='!download-link'>download the library</a> from the <a href='!info-link'>getID3 website</a> and extract the contents into the  module's getid3 directory. Currently, the recommended version of the getID3 library is %recommended-version.",
+        array('!download-link' => url('http://prdownloads.sourceforge.net/getid3'), '!info-link' => url('http://getid3.org/'), '%recommended-version' => GETID3_RECOMMEND_VERSION)) . '</p>';
       return $help;
   }
 }
@@ -24,18 +24,18 @@ function getid3_help($section, $arg) {
 function getid3_load($display_warning = TRUE) {
   $getid3_path = getid3_get_path();
 
-  if (file_exists($getid3_path .'/getid3.php') && file_exists($getid3_path .'/write.php')) {
+  if (file_exists($getid3_path . '/getid3.php') && file_exists($getid3_path . '/write.php')) {
     // A little workaround for getID3 on Windows.
     if (!defined('GETID3_HELPERAPPSDIR')) {
-      define('GETID3_HELPERAPPSDIR', realpath($getid3_path .'/../helperapps') .'/');
+      define('GETID3_HELPERAPPSDIR', realpath($getid3_path . '/../helperapps') . '/');
     }
-    include_once($getid3_path .'/getid3.php');
+    include_once($getid3_path . '/getid3.php');
 
     // Initialize getID3 tag-writing module. NOTE: Their wanky dependency setup
     // requires that this file must be included AFTER an instance of the getID3
     // class has been instantiated.
     $getid3 = new getID3;
-    require_once($getid3_path .'/write.php');
+    require_once($getid3_path . '/write.php');
 
     return defined('GETID3_VERSION');
   }
@@ -106,14 +106,14 @@ function getid3_admin_settings_form() {
     $form['getid3_version'] = array(
       '#type' => 'item',
       '#title' => t('Version'),
-      '#markup' => '<pre>'. check_plain($version) .'</pre>',
+      '#markup' => '<pre>' . check_plain($version) . '</pre>',
       '#description' => t("If you're seeing this it indicates that the getID3 library was found."),
     );
 
     // Check for existence of the 'demos' folder, contained in the getID3
     // library. The contents of this folder create a potential securtiy hole,
     // so we recommend that the user delete it.
-    $getid3_demos_path = getid3_get_path() .'/../demos';
+    $getid3_demos_path = getid3_get_path() . '/../demos';
     if (file_exists($getid3_demos_path)) {
       drupal_set_message(t("Your getID3 library is insecure! The demos distributed with getID3 contains code which creates a huge security hole. Remove the demos directory (%path) from beneth Drupal's directory.", array('%path' => realpath($getid3_demos_path))), 'error');
     }
@@ -138,7 +138,7 @@ function getid3_admin_settings_form() {
  */
 function _getid3_admin_settings_check_path($form_element) {
   $path = $form_element['#value'];
-  if (!is_dir($path) || !(file_exists($path .'/getid3.php') && file_exists($path .'/write.php'))) {
+  if (!is_dir($path) || !(file_exists($path . '/getid3.php') && file_exists($path . '/write.php'))) {
     form_set_error($form_element['#parents'][0], t('The getID3 files <em>getid3.php</em> and <em>write.php</em> could not be found in the %path directory.', array('%path' => $path)));
   }
   return $form_element;
@@ -148,7 +148,7 @@ function _getid3_admin_settings_check_path($form_element) {
  * Returns the path where getID3() is installed.
  */
 function getid3_get_path() {
-  return variable_get('getid3_path', drupal_get_path('module', 'getid3') .'/getid3/getid3');
+  return variable_get('getid3_path', drupal_get_path('module', 'getid3') . '/getid3/getid3');
 }
 
 /**
