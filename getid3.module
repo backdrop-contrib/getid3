@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-define('GETID3_RECOMMEND_VERSION', '1.7.7');
+define('GETID3_RECOMMEND_VERSION', '1.7.8b3');
 
 /**
  * Implementation of hook_help
@@ -48,7 +48,7 @@ function getid3_load($display_warning = TRUE) {
 /**
  * Create and initialize an instance of getID3 class.
  */
-function &getid3_instance() {
+function getid3_instance() {
   $id3 = NULL;
   if (getid3_load()) {
     $id3 = new getID3();
@@ -62,10 +62,15 @@ function &getid3_instance() {
 
 /**
  * Analyze file and return its media information.
+ *
+ * @param $path
+ *   A string specifying a file path.
+ * @return
+ *   An array with the information returned by getID3.
  */
-function &getid3_analyze($path) {
+function getid3_analyze($path) {
   $info = array();
-  if($id3 = &getid3_instance()) {
+  if($id3 = getid3_instance()) {
     $info = $id3->analyze($path);
     unset($id3);
   }
@@ -101,7 +106,7 @@ function getid3_admin_settings_form() {
     $form['getid3_version'] = array(
       '#type' => 'item',
       '#title' => t('Version'),
-      '#value' => '<pre>'. check_plain($version) .'</pre>',
+      '#markup' => '<pre>'. check_plain($version) .'</pre>',
       '#description' => t("If you're seeing this it indicates that the getID3 library was found."),
     );
 
