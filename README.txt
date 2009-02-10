@@ -1,5 +1,8 @@
 Checkout the Drupal CVS branch in accordance to your version of Drupal...
 
+Drupal 6:
+  DRUPAL-6--1
+
 Drupal 5:
   DRUPAL-5
 
