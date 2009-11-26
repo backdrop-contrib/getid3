@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-define('GETID3_RECOMMEND_VERSION', '1.7.8b3');
+define('GETID3_RECOMMEND_VERSION', '1.7.9');
 
 /**
  * Implementation of hook_help
@@ -54,7 +54,7 @@ function getid3_instance() {
     $id3 = new getID3();
     // MD5 is a big performance hit. Disable it by default.
     $id3->option_md5_data = FALSE;
-    $id3->option_md5_data_source = FALSE; 
+    $id3->option_md5_data_source = FALSE;
     $id3->encoding = 'UTF-8';
   }
   return $id3;
@@ -148,7 +148,7 @@ function _getid3_admin_settings_check_path($form_element) {
  * Returns the path where getID3() is installed.
  */
 function getid3_get_path() {
-  return variable_get('getid3_path', drupal_get_path('module', 'getid3') . '/getid3/getid3');
+  return variable_get('getid3_path', 'sites/all/libraries/getid3/getid3');
 }
 
 /**
