@@ -102,7 +102,7 @@ function getid3_admin_settings_form() {
     '#description' => t('The location where getID3() is installed. Relative paths are from the Drupal root directory.'),
     '#after_build' => array('_getid3_admin_settings_check_path'),
   );
-  if ($version = getid3_get_version(FALSE)) {
+  if ($version = getid3_get_version()) {
     $form['getid3_version'] = array(
       '#type' => 'item',
       '#title' => t('Version'),
@@ -115,7 +115,7 @@ function getid3_admin_settings_form() {
     // so we recommend that the user delete it.
     $getid3_demos_path = getid3_get_path() . '/../demos';
     if (file_exists($getid3_demos_path)) {
-      drupal_set_message(t("Your getID3 library is insecure! The demos distributed with getID3 contains code which creates a huge security hole. Remove the demos directory (%path) from beneth Drupal's directory.", array('%path' => realpath($getid3_demos_path))), 'error');
+      drupal_set_message(t("Your getID3 library is insecure! The demos distributed with getID3 contains code which creates a huge security hole. Remove the demos directory (%path) from beneath Drupal's directory.", array('%path' => realpath($getid3_demos_path))), 'error');
     }
   }
   $form['getid3_show_warnings'] = array(
