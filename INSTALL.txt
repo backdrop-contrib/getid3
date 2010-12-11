@@ -14,6 +14,6 @@ INSTALL
      unzip getid3-1.7.9.zip
 5. Delete the demos directory:
      rm -r demos/
-6. Go to Administer > Site building > Modules and enable the GetID3 module.
-7. Go to Administer > Settings > getID3. If you see the version you just
-   downloaded, the module is installed correctly.
+6. Go to Dashboard > Modules and enable the GetID3 module.
+7. Go to Dashboard > Configuration > Media > getID3. If you see the version you
+   just downloaded, the module is installed correctly.
