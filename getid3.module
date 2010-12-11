@@ -1,7 +1,7 @@
 <?php
 // $Id$
 
-define('GETID3_RECOMMEND_VERSION', '1.7.9');
+define('GETID3_RECOMMEND_VERSION', '1.8.2');
 
 /**
  * Implementation of hook_help
