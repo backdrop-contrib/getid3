@@ -7,7 +7,7 @@ define('GETID3_RECOMMEND_VERSION', '1.8.2');
  */
 function getid3_help($section, $arg) {
   switch ($section) {
-    case 'admin/settings/getid3':
+    case 'admin/config/media/getid3':
       $help = '<p>' . t("To use this module you'll need to <a href='!download-link'>download the library</a> from the <a href='!info-link'>getID3 website</a> and extract the contents into the  module's getid3 directory. Currently, the recommended version of the getID3 library is %recommended-version.",
         array('!download-link' => url('http://prdownloads.sourceforge.net/getid3'), '!info-link' => url('http://getid3.org/'), '%recommended-version' => GETID3_RECOMMEND_VERSION)) . '</p>';
       return $help;
