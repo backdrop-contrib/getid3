@@ -30,10 +30,10 @@ function getid3_menu() {
 }
 
 /**
- * Loads the getID3 library once and returns whether it was successfully loaded.
+ * Load the getID3 library.
  *
  * @return
- *   Boolean indicating if the library was loaded.
+ *   Boolean indicating if the library was successfully loaded.
  */
 function getid3_load($display_warning = TRUE) {
   $getid3_path = getid3_get_path();
@@ -77,15 +77,15 @@ function getid3_instance() {
 /**
  * Analyze file and return its media information.
  *
- * @param $path
+ * @param $filepath
  *   A string specifying a file path.
  * @return
  *   An array with the information returned by getID3.
  */
-function getid3_analyze($path) {
+function getid3_analyze($filepath) {
   $info = array();
   if ($id3 = getid3_instance()) {
-    $info = $id3->analyze($path);
+    $info = $id3->analyze($filepath);
     unset($id3);
   }
   return $info;
@@ -99,7 +99,7 @@ function getid3_get_path() {
 }
 
 /**
- * Returns the version number of getID3() that's installed.
+ * Returns the version number of getID3() that is installed.
  */
 function getid3_get_version() {
   return getid3_load(FALSE) ? GETID3_VERSION : NULL;

@@ -49,7 +49,7 @@ function getid3_enable() {
  */
 function getid3_install() {
   $status = array();
-   // Set module weight for the getID3 module
+   // Set module weight for the getID3 module.
   $status[] = db_query("UPDATE {system} SET weight = -10 WHERE name = 'getid3'");
 
   // If there is one FALSE value in the status array, there was an error.
