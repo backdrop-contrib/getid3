@@ -148,8 +148,10 @@ function getid3_analyze_file($file) {
     $file->getid3['audio_bitrate_mode'] = isset($info['audio']['bitrate_mode']) ? $info['audio']['bitrate_mode'] : NULL; //e.g. cbr
   }
 
-  // TODO: ID3 tags.
-/*
+  // @TODO: Kill off the audio module by allowing users to edit id3 tags on
+  // files. Explore a sub-module that allows tags to be mapped to CCK fields and
+  // allows reading and writing of the tags.
+
   // Add in arbitrary ID3 tags.
   if (isset($info['tags_html'])) {
     // We use tags_html instead of tags because it is the most reliable data
@@ -164,7 +166,6 @@ function getid3_analyze_file($file) {
       }
     }
   }
-*/
 }
 
 /**
