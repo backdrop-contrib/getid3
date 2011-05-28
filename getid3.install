@@ -47,7 +47,7 @@ function getid3_install() {
 
   // If there is one FALSE value in the status array, there was an error.
   if (array_search(FALSE, $status) !== FALSE) {
-    drupal_set_message(t('Setting the module weight of getID3 failed.'), 'error');
+    drupal_set_message(st('Setting the module weight of getID3 failed.'), 'error');
   }
 }
 
