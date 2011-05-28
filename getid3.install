@@ -1,4 +1,8 @@
 <?php
+/**
+ * @file
+ * Install, update and uninstall functions for the getid3 module.
+ */
 
 /**
  * Implements hook_requirements().
@@ -13,12 +17,15 @@ function getid3_requirements($phase) {
 
     if (getid3_load(FALSE)) {
       $requirements['getid3']['value'] = check_plain(getid3_get_version());
+
+      // Check if demos directory exists.
       $getid3_demos_path = getid3_get_path() . '/../demos';
       if (file_exists($getid3_demos_path)) {
         $requirements['getid3']['description'] = $t("Your getID3 library is insecure! The demos distributed with getID3 contains code which creates a huge security hole. Remove the demos directory (%path) from beneath Drupal's directory.", array('%path' => realpath($getid3_demos_path)));
         $requirements['getid3']['severity'] = REQUIREMENT_ERROR;
       }
     }
+    // getID3 library not found or wrong version.
     else {
       $requirements['getid3']['value'] = $t('Not found or wrong version');
       $requirements['getid3']['description'] = $t('You must install <a href="@getid3">getID3()</a> to %getid3dir, or <a href="@getid3settings">configure its installation path</a>.', array('@getid3' => 'http://www.getid3.org', '%getid3dir' => 'sites/all/libraries/getid3', '@getid3settings' => url('admin/config/media/getid3')));

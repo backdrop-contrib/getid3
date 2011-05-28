@@ -41,10 +41,11 @@ function getid3_admin_settings_form() {
 }
 
 /**
- * Checks the that the directory in $form_element exists and contains a file
- * named 'getid3.php'. If validation fails, the form element is flagged with an
- * error from within the file_check_directory function. See:
- * system_check_directory()
+ * Verifies that getid3 is in the directory specified by the form element.
+ *
+ * Checks that the directory in $form_element exists and contains files named
+ * 'getid3.php' and 'write.php'. If validation fails, the form element is
+ * flagged with an error.
  *
  * @param $form_element
  *   The form element containing the name of the directory to check.

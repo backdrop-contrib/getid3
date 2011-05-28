@@ -33,7 +33,7 @@ function getid3_menu() {
  * Loads the getID3 library once and returns whether it was successfully loaded.
  *
  * @return
- *   Boolean indicating if the library was loaded
+ *   Boolean indicating if the library was loaded.
  */
 function getid3_load($display_warning = TRUE) {
   $getid3_path = getid3_get_path();
