@@ -1,5 +1,7 @@
 name = "getID3()"
 description = "getID3() extracts useful information from multimedia file formats."
 core = 7.x
-files[] = getid3.module
+configure = admin/config/media/getid3
+files[] = getid3.admin.inc
 files[] = getid3.install
+files[] = getid3.module
