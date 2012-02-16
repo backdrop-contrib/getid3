@@ -146,3 +146,15 @@ function getid3_schema() {
 
   return $schema;
 }
+
+
+/**
+ * Create the getid3_meta table.
+ */
+function getid3_update_7101() {
+  // Lets get the schema.
+  $schema = getid3_schema();
+
+  // Create the table.
+  db_create_table('getid3_meta', $schema['getid3_meta']);
+}
