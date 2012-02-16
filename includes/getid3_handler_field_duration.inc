@@ -45,19 +45,18 @@ class getid3_handler_field_duration extends views_handler_field_numeric {
 
   function render($values) {
     $value = $values->{$this->field_alias};
-
     switch ($this->options['format']) {
       case 'hours':
-        $value = date('g', (int) $value);
+        $output = intval($value / 3600);
         break;
       case 'minutes':
-        $value = date('i', (int) $value);
+        $output = intval($value / 60);
         break;
       case 'seconds':
-        $value = date('s', (int) $value);
+        $output = intval($value);
         break;
       case 'total':
-        $value = $value;
+        $output = $value;
         break;
       default:
         $output = theme('getid3_duration', array('duration' => $value));
