@@ -158,3 +158,44 @@ function getid3_update_7101() {
   // Create the table.
   db_create_table('getid3_meta', $schema['getid3_meta']);
 }
+
+/**
+ * Add the meta data to files already created.
+ */
+function getid3_update_7102(&$sandbox) {
+  // Explicityly load the getid3 module.
+  drupal_load('module', 'getid3');
+
+  // Lets update 10 files at a time.
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['current_fid'] = 0;
+    // We only select files that are not in the getid3_meta table.
+    $sandbox['max'] = db_query('SELECT COUNT(fid) FROM {file_managed} f where f.fid not in (select fid from {getid3_meta})')->fetchField();
+  }
+
+  $query = db_select('file_managed', 'f')
+    ->fields('f', array('fid'))
+    ->condition('fid', $sandbox['current_fid'], '>')
+    ->range(0, 10)
+    ->orderBy('fid', 'ASC');
+  // Make sure to only select files not in the getid3_meta table.
+  $query->where('f.fid not in (select fid from {getid3_meta})');
+  $files = $query->execute();
+
+  foreach ($files as $file) {
+    // getid3_analyze_file is expecting a file object
+    // so we'll load i.
+    $file = file_load($file->fid);
+    getid3_analyze_file($file);
+    $record = array_merge($file->getid3, array('fid' => $file->fid));
+    // Lets manually add it to the table.
+    drupal_write_record('getid3_meta', $record);
+    $sandbox['progress']++;
+    $sandbox['current_fid'] = $file->fid;
+  }
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+
+  return t('All the meta data has been added for all the files.');
+}
