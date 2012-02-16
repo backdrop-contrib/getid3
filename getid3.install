@@ -115,9 +115,9 @@ function getid3_schema() {
         'default' => 0,
       ),
       'audio_channel_mode' => array(
-        'description' => 'The number of channels in the audio, by name (stereo or mono).',
+        'description' => 'The number of channels in the audio, by name (stereo, mono, or joint stereo).',
         'type' => 'varchar',
-        'length' => 10,
+        'length' => 13,
         'not null' => TRUE,
         'default' => '',
       ),
