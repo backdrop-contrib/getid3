@@ -50,10 +50,10 @@ class getid3_handler_field_duration extends views_handler_field_numeric {
         $output = intval($value / 3600);
         break;
       case 'minutes':
-        $output = intval($value / 60);
+        $output = intval($value % 3600 / 60);
         break;
       case 'seconds':
-        $output = intval($value);
+        $output = intval($value % 3600 % 60);
         break;
       case 'total':
         $output = $value;
@@ -61,7 +61,6 @@ class getid3_handler_field_duration extends views_handler_field_numeric {
       default:
         $output = theme('getid3_duration', array('duration' => $value));
     }
-
     // Check to see if hiding should happen before adding prefix and suffix.
     if ($this->options['hide_empty'] && empty($value) && ($value !== 0 || $this->options['empty_zero'])) {
       return '';
