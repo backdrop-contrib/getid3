@@ -36,15 +36,6 @@ function getid3_requirements($phase) {
  * Implements hook_install().
  */
 function getid3_install() {
-  $status = array();
-   // Set module weight for the getID3 module.
-  $status[] = db_query("UPDATE {system} SET weight = -10 WHERE name = 'getid3'");
-
-  // If there is one FALSE value in the status array, there was an error.
-  if (array_search(FALSE, $status) !== FALSE) {
-    drupal_set_message(st('Setting the module weight of getID3 failed.'), 'error');
-  }
-
   // Run a batched update on all existing file entities.
   getid3_perform_batch_process();
 }
@@ -128,4 +119,11 @@ function getid3_update_7202(&$sandbox) {
 
   // Process the existing file entities.
   getid3_analyze_existing_files($sandbox);
+}
+
+/**
+ * Set the module weight back to 0
+ */
+function getid3_update_7203() {
+  db_query("UPDATE {system} SET weight = 0 WHERE name = 'getid3'");
 }
