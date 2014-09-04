@@ -174,6 +174,86 @@ function getid3_file_presave($file) {
 }
 
 /**
+ * Triggers the batch operation for updating file entities.
+ */
+function getid3_perform_batch_process() {
+  $batch = array(
+    'title' => t('Updating existing File Entities with ID3 data'),
+    'init_message' => t('Preparing to update entities..'),
+    'progress_message' => t('Processed @current out of @total items.'),
+    'operations' => array(
+      array('getid3_analyze_existing_files', array()),
+    ),
+    'finished' => 'getid3_perform_batch_process_complete',
+  );
+  batch_set($batch);
+}
+
+/**
+ * BatchAPI complete callback for getID3 import.
+ */
+function getid3_perform_batch_process_complete($success, $results, $operations) {
+  if ($results['errors']) {
+    drupal_set_message(theme('item_list', array('items' => $results['errors'])), 'error');
+  }
+  if ($results['success']) {
+    drupal_set_message(t('File entity ID3 data updated successfully.'));
+  }
+}
+
+/**
+ * Performs batch operations to update existing file entity metadata.
+ *
+ * @param $context
+ * @return null|string
+ */
+function getid3_analyze_existing_files(&$context) {
+  // Little workaround so update hook and can use same batch.
+  if (isset($context['sandbox'])) {
+    $sandbox =& $context['sandbox'];
+  }
+  else {
+    $sandbox =& $context;
+  }
+
+  // Lets update 10 files at a time.
+  if (!isset($sandbox['progress'])) {
+    $sandbox['progress'] = 0;
+    $sandbox['current_fid'] = 0;
+    // We only select files that are not in the getid3_meta table.
+    $sandbox['max'] = db_query('SELECT COUNT(fid) FROM {file_managed} f WHERE f.filemime LIKE :video OR f.filemime LIKE :audio', array(':video' => 'video%', ':audio' => 'audio%'))->fetchField();
+  }
+
+  $query = db_select('file_managed', 'f')
+    ->fields('f', array('fid'))
+    ->condition('fid', $sandbox['current_fid'], '>')
+    ->range(0, 10)
+    ->orderBy('fid', 'ASC');
+  $db_or = db_or();
+  $db_or->condition('f.filemime', db_like('video') . '%', 'LIKE');
+  $db_or->condition('f.filemime', db_like('audio') . '%', 'LIKE');
+  $query->condition($db_or);
+  $files = $query->execute()->fetchAll();
+
+  $stop = null;
+
+  foreach ($files as $file) {
+    // We just need to re-save entities.
+    $file = file_load($file->fid);
+    file_save($file);
+
+    // Update batch
+    $sandbox['progress']++;
+    $sandbox['current_fid'] = $file->fid;
+  }
+
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+
+  return t('All the metadata has been updated for all managed files.');
+
+}
+
+/**
  * Implements hook_views_api().
  */
 function getid3_views_api() {

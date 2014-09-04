@@ -119,12 +119,10 @@ function getid3_update_7201() {
  * Moves getID3 metadata information into File Entity.
  * @todo: Flush out in https://www.drupal.org/node/2330955
  */
-/*
-function getid3_update_7202() {
-  // @todo: Create helper to migrate data from module table to File Entity
-  //          Or drop table and just re-run everything with updated getID3.
-
+function getid3_update_7202(&$sandbox) {
   // Drop the old table.
-  db_create_table('getid3_meta');
+  db_drop_table('getid3_meta');
+
+  // Process the existing file entities.
+  getid3_analyze_existing_files($sandbox);
 }
-*/
