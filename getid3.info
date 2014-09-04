@@ -5,11 +5,6 @@ configure = admin/config/media/getid3
 
 dependencies[] = libraries
 
-files[] = getid3.admin.inc
-files[] = getid3.install
-files[] = getid3.module
-files[] = getid3.token.inc
-files[] = includes/getid3.views.inc
 files[] = includes/getid3_handler_field_bitrate.inc
 files[] = includes/getid3_handler_field_duration.inc
 files[] = includes/getid3_handler_field_sample_rate.inc
