@@ -44,6 +44,9 @@ function getid3_install() {
   if (array_search(FALSE, $status) !== FALSE) {
     drupal_set_message(st('Setting the module weight of getID3 failed.'), 'error');
   }
+
+  // Run a batched update on all existing file entities.
+  getid3_perform_batch_process();
 }
 
 /**
