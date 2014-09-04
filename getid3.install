@@ -12,36 +12,24 @@ function getid3_requirements($phase) {
   $requirements = array();
 
   if ($phase == 'runtime') {
-    // Test getID3 version
-    $requirements['getid3']['title'] = $t('getID3()');
+    $requirements['getID3'] = array(
+      'title' => $t('getID3() PHP Library'),
+      'value' => $t('The getID3() library is present'),
+      'severity' => REQUIREMENT_ERROR,
+    );
 
-    if (getid3_load(FALSE)) {
-      $requirements['getid3']['value'] = check_plain(getid3_get_version());
+    // Detect the library
+    $library = libraries_detect('getID3');
 
-      // Check if demos directory exists.
-      $getid3_demos_path = getid3_get_path() . '/../demos';
-      if (file_exists($getid3_demos_path)) {
-        $requirements['getid3']['description'] = $t("Your getID3 library is insecure! The demos distributed with getID3 contains code which creates a huge security hole. Remove the demos directory (%path) from beneath Drupal's directory.", array('%path' => realpath($getid3_demos_path)));
-        $requirements['getid3']['severity'] = REQUIREMENT_ERROR;
-      }
+    if ($library['installed']) {
+      $requirements['getID3']['severity'] = REQUIREMENT_OK;
     }
-    // getID3 library not found or wrong version.
-    else {
-      $requirements['getid3']['value'] = $t('Not found or wrong version');
-      $requirements['getid3']['description'] = $t('You must install <a href="@getid3">getID3()</a> to %getid3dir, or <a href="@getid3settings">configure its installation path</a>.', array('@getid3' => 'http://www.getid3.org', '%getid3dir' => 'sites/all/libraries/getid3', '@getid3settings' => url('admin/config/media/getid3')));
-      $requirements['getid3']['severity'] = REQUIREMENT_ERROR;
+    elseif (isset($library['error']) && !empty($library['error'])) {
+      $requirements['getID3']['description'] = $library['error message'];
     }
   }
 
   return $requirements;
-}
-
-/**
- * Implements hook_enable().
- */
-function getid3_enable() {
-  // Display a message if it fails to load getID3().
-  getid3_load();
 }
 
 /**
@@ -198,4 +186,12 @@ function getid3_update_7102(&$sandbox) {
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 
   return t('All the meta data has been added for all the files.');
+}
+
+/**
+ * Remove unused variables from 7.x-1.x
+ */
+function getid3_update_7201() {
+  variable_del('getid3_path');
+  variable_del('getid3_path');
 }

@@ -2,6 +2,9 @@ name = "getID3()"
 description = "getID3() extracts useful information from multimedia file formats."
 core = 7.x
 configure = admin/config/media/getid3
+
+dependencies[] = libraries
+
 files[] = getid3.admin.inc
 files[] = getid3.install
 files[] = getid3.module
