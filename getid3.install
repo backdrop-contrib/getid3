@@ -56,87 +56,6 @@ function getid3_uninstall() {
 
 
 /**
- * Implements hook_schema().
- */
-function getid3_schema() {
-  $schema = array();
-  // The primary field/index.
-  $schema['getid3_meta'] = array(
-    'description' => 'The table for meta data about filefield files.',
-    'fields' => array(
-      'fid' => array(
-        'description' => 'The file id.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      ),
-      'width' => array(
-        'description' => 'Width of a video or image file in pixels.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-      ),
-      'height' => array(
-        'description' => 'Height of a video or image file in pixels.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-      ),
-      'duration' => array(
-        'description' => 'The duration of audio or video files, in seconds.',
-        'type' => 'float',
-        'size' => 'normal',
-        'not null' => FALSE,
-      ),
-      'audio_format' => array(
-        'description' => 'The audio format.',
-        'type' => 'varchar',
-        'length' => 10,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'audio_sample_rate' => array(
-        'description' => 'The sample rate of the audio.',
-        'type' => 'int',
-        'size' => 'medium',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'audio_channel_mode' => array(
-        'description' => 'The number of channels in the audio, by name (stereo, mono, or joint stereo).',
-        'type' => 'varchar',
-        'length' => 13,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'audio_bitrate' => array(
-        'description' => 'The audio bitrate.',
-        'type' => 'float',
-        'size' => 'medium',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'audio_bitrate_mode' => array(
-        'description' => 'The kind of audio bitrate, such as VBR. Usually empty.',
-        'type' => 'varchar',
-        'length' => 4,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'tags' => array(
-        'description' => 'ID3 tags such as artist, album, and genre.',
-        'type' => 'text',
-        'serialize' => TRUE,
-      ),
-    ),
-    'primary key' => array('fid'),
-  );
-
-  return $schema;
-}
-
-
-/**
  * Create the getid3_meta table.
  */
 function getid3_update_7101() {
@@ -195,3 +114,17 @@ function getid3_update_7201() {
   variable_del('getid3_path');
   variable_del('getid3_path');
 }
+
+/**
+ * Moves getID3 metadata information into File Entity.
+ * @todo: Flush out in https://www.drupal.org/node/2330955
+ */
+/*
+function getid3_update_7202() {
+  // @todo: Create helper to migrate data from module table to File Entity
+  //          Or drop table and just re-run everything with updated getID3.
+
+  // Drop the old table.
+  db_create_table('getid3_meta');
+}
+*/
