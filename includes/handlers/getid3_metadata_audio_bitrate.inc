@@ -1,15 +1,9 @@
 <?php
-/**
- * @file
- * A special handler that properly formats bit rate fields as kHz.
- */
 
 /**
- * Render a field as a readable value in hours, minutes, and seconds.
- *
- * @ingroup views_field_handlers
+ * Field handler to render width
  */
-class getid3_handler_field_sample_rate extends views_handler_field_numeric {
+class getid3_metadata_audio_bitrate extends getid3_metadata_handler {
   function option_definition() {
     $options = parent::option_definition();
 
@@ -24,7 +18,7 @@ class getid3_handler_field_sample_rate extends views_handler_field_numeric {
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
-    // Remove the separator options since we don't need them.
+    // Remove the separator and alter options since we don't need them.
     unset($form['separator']);
 
     $form['prefix']['#weight'] = 10;
@@ -34,14 +28,14 @@ class getid3_handler_field_sample_rate extends views_handler_field_numeric {
       '#title' => t('Format'),
       '#default_value' => $this->options['format'],
       '#options' => array(
-        'default' => t('Default (kHz)'),
+        'default' => t('Default (Mbps or Kbps)'),
         'raw' => t('Raw numberic value'),
       ),
     );
   }
 
   function render($values) {
-    $value = $values->{$this->field_alias};
+    $value = parent::render($values)['audio_bitrate'];
 
     // Check to see if hiding should happen before adding prefix and suffix.
     if ($this->options['hide_empty'] && empty($value) && ($value !== 0 || $this->options['empty_zero'])) {
@@ -53,9 +47,9 @@ class getid3_handler_field_sample_rate extends views_handler_field_numeric {
         $output = $value;
         break;
       default:
-        $output = theme('getid3_sample_rate', array('sample_rate' => $value));
+        $output = theme('getid3_bitrate', array('bitrate' => $value));
     }
 
-    return check_plain($this->options['prefix']) . $output . check_plain($this->options['suffix']);
+    return $this->sanitize_value($this->options['prefix']) . $output . $this->sanitize_value($this->options['suffix']);
   }
 }

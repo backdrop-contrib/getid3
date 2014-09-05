@@ -8,30 +8,11 @@
  * Implements hook_views_data()
  */
 function getid3_views_data() {
-  // Define the base group of this table. Fields that don't
-  // have a group defined will go into this field by default.
-  $data['getid3_meta']['table']['group']  = t('File');
-
-  // For other base tables, explain how we join
-  $data['getid3_meta']['table']['join'] = array(
-    // this explains how the 'getid3_meta' table (named in the line above)
-    // links toward the files table.
-    'file_managed' => array(
-      'left_table' => 'file_managed', // Because this is a direct link it could be left out.
-      'left_field' => 'fid',
-      'field' => 'fid',
-     ),
-  );
-
-  // ----------------------------------------------------------------
-  // getid3_meta table -- fields
-
-  // width
-  $data['getid3_meta']['width'] = array(
+  $data['file_managed']['width'] = array(
     'title' => t('Width'),
     'help' => t('Width of a video or image file in pixels.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'handler' => 'getid3_metadata_width',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -43,11 +24,11 @@ function getid3_views_data() {
   );
 
   // height
-  $data['getid3_meta']['height'] = array(
+  $data['file_managed']['height'] = array(
     'title' => t('Height'),
     'help' => t('Height of a video or image file in pixels.'),
     'field' => array(
-      'handler' => 'views_handler_field_numeric',
+      'handler' => 'getid3_metadata_height',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -59,11 +40,11 @@ function getid3_views_data() {
   );
 
   // duration
-  $data['getid3_meta']['duration'] = array(
+  $data['file_managed']['duration'] = array(
     'title' => t('Duration'),
     'help' => t('The duration of audio or video files, in seconds.'),
     'field' => array(
-      'handler' => 'getid3_handler_field_duration',
+      'handler' => 'getid3_metadata_duration',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -75,11 +56,11 @@ function getid3_views_data() {
   );
 
   // audio_format
-  $data['getid3_meta']['audio_format'] = array(
+  $data['file_managed']['audio_format'] = array(
     'title' => t('Audio format'),
     'help' => t('The audio format.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'handler' => 'getid3_metadata_audio_format',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -91,11 +72,11 @@ function getid3_views_data() {
   );
 
   // audio_sample_rate
-  $data['getid3_meta']['audio_sample_rate'] = array(
+  $data['file_managed']['audio_sample_rate'] = array(
     'title' => t('Audio sample rate'),
     'help' => t('The sample rate of the audio.'),
     'field' => array(
-      'handler' => 'getid3_handler_field_sample_rate',
+      'handler' => 'getid3_metadata_audio_sample_rate',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -107,11 +88,11 @@ function getid3_views_data() {
   );
 
   // audio_channel_mode
-  $data['getid3_meta']['audio_channel_mode'] = array(
+  $data['file_managed']['audio_channel_mode'] = array(
     'title' => t('Audio channel mode'),
     'help' => t('The number of channels in the audio, by name: stereo or mono.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'handler' => 'getid3_metadata_audio_channel_mode',
       'click sortable' => TRUE,
     ),
     'sort' => array(
@@ -123,11 +104,11 @@ function getid3_views_data() {
   );
 
   // audio_bitrate
-  $data['getid3_meta']['audio_bitrate'] = array(
+  $data['file_managed']['audio_bitrate'] = array(
     'title' => t('Audio bitrate'),
     'help' => t('The audio bitrate.'),
     'field' => array(
-      'handler' => 'getid3_handler_field_bitrate',
+      'handler' => 'getid3_metadata_audio_bitrate',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -139,11 +120,11 @@ function getid3_views_data() {
   );
 
   // audio_bitrate_mode
-  $data['getid3_meta']['audio_bitrate_mode'] = array(
+  $data['file_managed']['audio_bitrate_mode'] = array(
     'title' => t('Audio bitrate mode'),
     'help' => t('The audio bitrate mode: cbr, vbr, abr.'),
     'field' => array(
-      'handler' => 'views_handler_field',
+      'handler' => 'getid3_metadata_audio_bitrate_mode',
       'click sortable' => TRUE,
      ),
     'sort' => array(
@@ -153,16 +134,6 @@ function getid3_views_data() {
       'handler' => 'views_handler_filter_string',
     ),
   );
-
-  //// Tags.
-  //$data['getid3_meta']['tags'] = array(
-  //  'title' => t('ID3 tags'),
-  //  'help' => t('ID3 tags include embedded information such as artist, album, year, genre and other informaiton.'),
-  //  'field' => array(
-  //    'handler' => 'getid3_handler_field_tags',
-  //    'click sortable' => FALSE,
-  //  ),
-  //);
 
   return $data;
 }

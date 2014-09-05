@@ -6,7 +6,12 @@ configure = admin/config/media/getid3
 dependencies[] = file_entity
 dependencies[] = libraries
 
-files[] = includes/getid3_handler_field_bitrate.inc
-files[] = includes/getid3_handler_field_duration.inc
-files[] = includes/getid3_handler_field_sample_rate.inc
-files[] = includes/getid3_handler_field_tags.inc
+files[] = includes/handlers/getid3_metadata_handler.inc
+files[] = includes/handlers/getid3_metadata_audio_bitrate.inc
+files[] = includes/handlers/getid3_metadata_audio_bitrate_mode.inc
+files[] = includes/handlers/getid3_metadata_audio_channel_mode.inc
+files[] = includes/handlers/getid3_metadata_audio_format.inc
+files[] = includes/handlers/getid3_metadata_audio_sample_rate.inc
+files[] = includes/handlers/getid3_metadata_duration.inc
+files[] = includes/handlers/getid3_metadata_height.inc
+files[] = includes/handlers/getid3_metadata_width.inc
