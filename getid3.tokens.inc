@@ -65,35 +65,35 @@ function getid3_tokens($type, $tokens, array $data = array(), array $options = a
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'width':
-          $replacements[$original] = (int) $file->getid3->width;
+          $replacements[$original] = (int) $file->metadata['width'];
           break;
 
         case 'height':
-          $replacements[$original] = (int) $file->getid3->height;
+          $replacements[$original] = (int) $file->metadata['height'];
           break;
 
         case 'duration':
-          $replacements[$original] = theme('getid3_duration', array('duration' => $file->getid3->duration));
+          $replacements[$original] = theme('getid3_duration', array('duration' => $file->metadata['duration']));
           break;
 
         case 'audio-format';
-          $replacements[$original] = $sanitize ? check_plain($file->getid3->audio_format) : $file->getid3->audio_format;
+          $replacements[$original] = $sanitize ? check_plain($file->metadata['audio_format']) : $file->metadata['audio_format'];
           break;
 
         case 'audio-sample-rate':
-          $replacements[$original] = theme('getid3_sample_rate', array('sample_rate' => $file->getid3->audio_sample_rate));
+          $replacements[$original] = theme('getid3_sample_rate', array('sample_rate' => $file->metadata['audio_sample_rate']));
           break;
 
         case 'audio-channel-mode':
-          $replacements[$original] = $sanitize ? check_plain($file->getid3->audio_channel_mode) : $file->getid3->audio_channel_mode;
+          $replacements[$original] = $sanitize ? check_plain($file->metadata['audio_channel_mode']) : $file->metadata['audio_channel_mode'];
           break;
 
         case 'audio-bitrate':
-          $replacements[$original] = theme('getid3_bitrate', array('bitrate' => $file->getid3->audio_bitrate));
+          $replacements[$original] = theme('getid3_bitrate', array('bitrate' => $file->metadata['audio_bitrate']));
           break;
 
         case 'audio-bitrate-mode':
-          $replacements[$original] = $sanitize ? check_plain($file->getid3->audio_bitrate_mode) : $file->getid3->audio_bitrate_mode;
+          $replacements[$original] = $sanitize ? check_plain($file->metadata['audio_bitrate_mode']) : $file->metadata['audio_bitrate_mode'];
           break;
       }
     }
