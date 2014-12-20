@@ -19,13 +19,18 @@ function getid3_requirements($phase) {
     );
 
     // Detect the library
-    $library = libraries_detect('getID3');
+    if (module_exists('libraries')) {
+      $library = libraries_detect('getID3');
 
-    if ($library['installed']) {
-      $requirements['getID3']['severity'] = REQUIREMENT_OK;
+      if ($library['installed']) {
+        $requirements['getID3']['severity'] = REQUIREMENT_OK;
+      }
+      elseif (isset($library['error']) && !empty($library['error'])) {
+        $requirements['getID3']['description'] = $library['error message'];
+      }
     }
-    elseif (isset($library['error']) && !empty($library['error'])) {
-      $requirements['getID3']['description'] = $library['error message'];
+    else {
+      $requirements['getID3']['description'] = t('The getID3() module now requires Libraries.');
     }
   }
 
@@ -50,20 +55,29 @@ function getid3_uninstall() {
 
 
 /**
- * Create the getid3_meta table.
+ * Create the getid3_meta table. (Skipped in 7.x-2.x)
  */
 function getid3_update_7101() {
+  // @note: 7.x-2.x does not maintain it's own metadata table and relies on
+  //        the functionality provided by File Entity for this.
+
   // Lets get the schema.
-  $schema = getid3_schema();
+  // $schema = getid3_schema();
 
   // Create the table.
-  db_create_table('getid3_meta', $schema['getid3_meta']);
+  // db_create_table('getid3_meta', $schema['getid3_meta']);
 }
 
 /**
- * Add the meta data to files already created.
+ * Add the meta data to files already created. (Skipped in 7.x-2.x)
  */
 function getid3_update_7102(&$sandbox) {
+  // @note: 7.x-2.x does not maintain it's own metadata table and relies on
+  //        the functionality provided by File Entity for this.
+  // @note: getid3_update_7202() does same process but for 7.x-2.x branch.
+
+
+  /*
   // Explicityly load the getid3 module.
   drupal_load('module', 'getid3');
 
@@ -99,6 +113,7 @@ function getid3_update_7102(&$sandbox) {
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 
   return t('All the meta data has been added for all the files.');
+  */
 }
 
 /**
@@ -111,11 +126,12 @@ function getid3_update_7201() {
 
 /**
  * Moves getID3 metadata information into File Entity.
- * @todo: Flush out in https://www.drupal.org/node/2330955
  */
 function getid3_update_7202(&$sandbox) {
-  // Drop the old table.
-  db_drop_table('getid3_meta');
+  // Drop the old table, if created (was created in 7.x-1.x after 7101 update.)
+  if(db_table_exists('getid3_meta')) {
+    db_drop_table('getid3_meta');
+  }
 
   // Process the existing file entities.
   getid3_analyze_existing_files($sandbox);
