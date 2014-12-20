@@ -193,11 +193,11 @@ function getid3_perform_batch_process() {
  * BatchAPI complete callback for getID3 import.
  */
 function getid3_perform_batch_process_complete($success, $results, $operations) {
-  if ($results['errors']) {
-    drupal_set_message(theme('item_list', array('items' => $results['errors'])), 'error');
+  if ($success) {
+    drupal_set_message(t('File entity ID3 data updated @count files successfully.', array('@count' => count($results))));
   }
-  if ($results['success']) {
-    drupal_set_message(t('File entity ID3 data updated successfully.'));
+  else {
+    drupal_set_message(theme('item_list', array('items' => $results['errors'])), 'error');
   }
 }
 
@@ -235,8 +235,6 @@ function getid3_analyze_existing_files(&$context) {
   $query->condition($db_or);
   $files = $query->execute()->fetchAll();
 
-  $stop = null;
-
   foreach ($files as $file) {
     // We just need to re-save entities.
     $file = file_load($file->fid);
@@ -244,13 +242,14 @@ function getid3_analyze_existing_files(&$context) {
 
     // Update batch
     $sandbox['progress']++;
+    $context['results'][] = $file->fid;
     $sandbox['current_fid'] = $file->fid;
   }
 
-  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
-
-  return t('All the metadata has been updated for all managed files.');
-
+  $context['message'] = t('Parsing @current out of @max files', array('@current' => count($context['results']), '@max' => $sandbox['max']));
+  // Let Batch API or upgrade hook know if this batch set is completed.
+  $context['finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
+  $sandbox['#finished'] = $context['finished'];
 }
 
 /**
