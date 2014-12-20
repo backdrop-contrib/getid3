@@ -144,12 +144,12 @@ function getid3_file_presave($file) {
     }
 
     // Update audio specific information.
-    if (isset($info['audio'])) {
-      $file->metadata['audio_format'] = $info['audio']['dataformat'];
-      $file->metadata['audio_sample_rate'] = $info['audio']['sample_rate'];
-      $file->metadata['audio_channel_mode'] = $info['audio']['channelmode'];
-      $file->metadata['audio_bitrate'] = isset($info['audio']['bitrate']) ? $info['audio']['bitrate'] : NULL;
-      $file->metadata['audio_bitrate_mode'] = isset($info['audio']['bitrate_mode']) ? $info['audio']['bitrate_mode'] : NULL;
+    if (isset($id3_data['audio'])) {
+      $file->metadata['audio_format'] = $id3_data['audio']['dataformat'];
+      $file->metadata['audio_sample_rate'] = $id3_data['audio']['sample_rate'];
+      $file->metadata['audio_channel_mode'] = $id3_data['audio']['channelmode'];
+      $file->metadata['audio_bitrate'] = isset($id3_data['audio']['bitrate']) ? $id3_data['audio']['bitrate'] : NULL;
+      $file->metadata['audio_bitrate_mode'] = isset($id3_data['audio']['bitrate_mode']) ? $id3_data['audio']['bitrate_mode'] : NULL;
     }
   }
 
