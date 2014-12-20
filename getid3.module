@@ -50,12 +50,12 @@ function getid3_theme($existing, $type, $theme, $path) {
  * Implements hook_libraries_info().
  */
 function getid3_libraries_info() {
-  $libraries['getID3'] = array(
+  $libraries['getid3'] = array(
     'name' => 'getID3',
     'vendor url' => 'http://www.getid3.org',
-    'download url' => 'https://sourceforge.net/projects/getid3/files/getID3%28%29%201.x',
+    'download url' => 'http://sourceforge.net/projects/getid3/files/getID3%28%29%201.x/1.9.9/getID3-1.9.9-20141218.zip/download',
     'path' => 'getid3',
-    'version' => '1.9.8', // @TODO: Move this into version_callback and version_arguments.
+    'version' => '1.9.9', // @TODO: Move this into version_callback and version_arguments.
     'files' => array(
       'php' => array(
         'getid3.php',
@@ -74,9 +74,9 @@ function getid3_libraries_info() {
  */
 function getid3_load($display_warning = TRUE) {
   // Ensure the getID3() library is loaded.
-  $library = libraries_detect('getID3');
+  $library = libraries_detect('getid3');
   if ($library['installed']) {
-    libraries_load('getID3');
+    libraries_load('getid3');
     return TRUE;
   }
   return FALSE;
