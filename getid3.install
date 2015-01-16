@@ -20,7 +20,7 @@ function getid3_requirements($phase) {
 
     // Detect the library
     if (module_exists('libraries')) {
-      $library = libraries_detect('getID3');
+      $library = libraries_detect('getid3');
 
       if ($library['installed']) {
         $requirements['getID3']['severity'] = REQUIREMENT_OK;
