@@ -35,7 +35,8 @@ class getid3_metadata_audio_sample_rate extends getid3_metadata_handler {
   }
 
   function render($values) {
-    $value = parent::render($values)['audio_sample_rate'];
+    $rendered_values = parent::render($values);
+    $value = $rendered_values['audio_sample_rate'];
 
     // Check to see if hiding should happen before adding prefix and suffix.
     if ($this->options['hide_empty'] && empty($value) && ($value !== 0 || $this->options['empty_zero'])) {
