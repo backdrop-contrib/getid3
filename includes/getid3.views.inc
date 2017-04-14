@@ -43,6 +43,7 @@ function getid3_views_data() {
   $data['file_managed']['duration'] = array(
     'title' => t('Duration'),
     'help' => t('The duration of audio or video files, in seconds.'),
+    'real field' => 'fid',
     'field' => array(
       'handler' => 'getid3_metadata_duration',
       'click sortable' => TRUE,

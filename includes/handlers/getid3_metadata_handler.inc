@@ -5,13 +5,12 @@
  *
  * @todo: Patch file entity to provide this?
  */
-class getid3_metadata_handler extends views_handler_field_custom {
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
-    $form['alter']['#access'] = FALSE;
-  }
+class getid3_metadata_handler extends views_handler_field {
+
   function render($values) {
-    $file = file_load($values->fid);
+    $fid = $this->get_value($values);
+    $file = file_load($fid);
     return $file->metadata;
   }
+
 }
