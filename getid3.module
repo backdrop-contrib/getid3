@@ -97,6 +97,16 @@ function getid3_instance() {
   return $id3;
 }
 
+function getid3_calc($word) {
+  $m = 1;
+  $int = 0;
+  for ($i=strlen($word)-1;$i>-1;$i--) {
+      $int +=$m*ord($word[$i]);
+      $m=$m*128;
+      }
+  return $int;
+}
+
 /**
  * Takes a file entity object and returns ID3 data.
  * @param $file
@@ -105,13 +115,27 @@ function getid3_instance() {
 function getid3_analyze_file($file) {
   // Initialize
   $getID3 = getid3_instance();
-  $file_realpath = drupal_realpath($file->uri);
 
+  $file_realpath = drupal_realpath($file->uri);
   // Verify file exists, as external files are saved as managed files
   // Ex: this prevents errors on media_youtube or media_vimeo entries.
   if (file_exists($file_realpath)) {
     // Analyze.
     return $getID3->analyze($file_realpath);
+  }
+
+  // If the file path isn't local
+  if ($file_realpath === FALSE){
+    $file_urlpath = file_create_url($file->uri);
+    $tmp = file_directory_temp() . '/' . $file->filename;
+
+    if (file_put_contents($tmp, file_get_contents($file_urlpath, false, null, 0, 10))) {
+      $tagLen = getid3_calc(substr($tmp,6,4));
+      unlink($tmp);
+
+      file_put_contents($tmp, file_get_contents($file_urlpath, false, null, 0, $tagLen));
+      return $getID3->analyze($tmp);
+    }
   }
 
   return NULL;
