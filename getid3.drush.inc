@@ -19,6 +19,18 @@ function getid3_drush_command() {
 }
 
 /**
+ * Implements drush_MODULE_pre_COMMAND().
+ *
+ * This automatically downloads the library when the module is being installed.
+ */
+function drush_getid3_pre_pm_enable() {
+  $modules = func_get_args();
+  if (in_array('getid3', $modules)) {
+    drush_getid3_download();
+  }
+}
+
+/**
  * Download the getID3 library from SourceForge.
  */
 function drush_getid3_download() {
@@ -27,7 +39,7 @@ function drush_getid3_download() {
     $library_path = $args[0];
   }
   else {
-    $library_path = drush_get_context('DRUSH_DRUPAL_ROOT') . '/sites/all/libraries/getid3';
+    $library_path = drush_get_context('DRUSH_BACKDROP_ROOT') . '/sites/all/libraries/getid3';
   }
 
   if (!file_exists($library_path)) {

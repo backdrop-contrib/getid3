@@ -7,7 +7,10 @@ class getid3_metadata_audio_bitrate extends getid3_metadata_handler {
   function option_definition() {
     $options = parent::option_definition();
 
-    $options['format'] = array('default' => 'default', 'translatable' => TRUE);
+    $options['format'] = array(
+      'default' => 'default',
+      'translatable' => TRUE,
+    );
 
     // Remove the separator options since we don't need them.
     unset($options['separator']);
@@ -35,7 +38,7 @@ class getid3_metadata_audio_bitrate extends getid3_metadata_handler {
   }
 
   function render($values) {
-    $value = parent::render($values)['audio_bitrate'];
+    $value = parent::render($values) ['audio_bitrate'];
 
     // Check to see if hiding should happen before adding prefix and suffix.
     if ($this->options['hide_empty'] && empty($value) && ($value !== 0 || $this->options['empty_zero'])) {

@@ -76,8 +76,8 @@ function getid3_tokens($type, $tokens, array $data = array(), array $options = a
           $replacements[$original] = theme('getid3_duration', array('duration' => $file->metadata['duration']));
           break;
 
-        case 'audio-format';
-          $replacements[$original] = $sanitize ? check_plain($file->metadata['audio_format']) : $file->metadata['audio_format'];
+        case 'audio-format':
+          $replacements[$original] = $sanitize?check_plain($file->metadata['audio_format']) : $file->metadata['audio_format'];
           break;
 
         case 'audio-sample-rate':
@@ -85,7 +85,7 @@ function getid3_tokens($type, $tokens, array $data = array(), array $options = a
           break;
 
         case 'audio-channel-mode':
-          $replacements[$original] = $sanitize ? check_plain($file->metadata['audio_channel_mode']) : $file->metadata['audio_channel_mode'];
+          $replacements[$original] = $sanitize?check_plain($file->metadata['audio_channel_mode']) : $file->metadata['audio_channel_mode'];
           break;
 
         case 'audio-bitrate':
@@ -93,7 +93,7 @@ function getid3_tokens($type, $tokens, array $data = array(), array $options = a
           break;
 
         case 'audio-bitrate-mode':
-          $replacements[$original] = $sanitize ? check_plain($file->metadata['audio_bitrate_mode']) : $file->metadata['audio_bitrate_mode'];
+          $replacements[$original] = $sanitize?check_plain($file->metadata['audio_bitrate_mode']) : $file->metadata['audio_bitrate_mode'];
           break;
       }
     }

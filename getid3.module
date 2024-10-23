@@ -5,14 +5,14 @@ define('GETID3_RECOMMEND_VERSION', '1.8.2');
 /**
  * Implements hook_help().
  */
-function getid3_help($section, $arg) {
-  switch ($section) {
-    case 'admin/config/media/getid3':
-      $help = '<p>' . t("To use this module you'll need to <a href='!download-link'>download the library</a> from the <a href='!info-link'>getID3 website</a> and extract the contents into the site's libraries directory. Currently, the recommended version of the getID3 library is %recommended-version.",
-        array('!download-link' => url('http://prdownloads.sourceforge.net/getid3'), '!info-link' => url('http://getid3.org/'), '%recommended-version' => GETID3_RECOMMEND_VERSION)) . '</p>';
-      return $help;
-  }
-}
+// function getid3_help($section, $arg) {
+//   switch ($section) {
+//     case 'admin/config/media/getid3':
+//       $help = '<p>' . t("To use this module you'll need to <a href='!download-link'>download the library</a> from the <a href='!info-link'>getID3 website</a> and extract the contents into the site's libraries directory. Currently, the recommended version of the getID3 library is %recommended-version.",
+//         array('!download-link' => url('http://prdownloads.sourceforge.net/getid3'), '!info-link' => url('http://getid3.org/'), '%recommended-version' => GETID3_RECOMMEND_VERSION)) . '</p>';
+//       return $help;
+//   }
+// }
 
 /**
  * Implements hook_menu().
@@ -21,7 +21,7 @@ function getid3_menu() {
   $items['admin/config/media/getid3'] = array(
     'title' => 'getID3()',
     'description' => 'Configure settings associated with getID3().',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('getid3_admin_settings_form', NULL),
     'access arguments' => array('administer site configuration'),
     'file' => 'getid3.admin.inc',
@@ -49,21 +49,21 @@ function getid3_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_libraries_info().
  */
-function getid3_libraries_info() {
-  $libraries['getid3'] = array(
-    'name' => 'getID3',
-    'vendor url' => 'http://www.getid3.org',
-    'download url' => 'http://sourceforge.net/projects/getid3/files/getID3%28%29%201.x/1.9.9/getID3-1.9.9-20141218.zip/download',
-    'path' => 'getid3',
-    'version' => '1.9.9', // @TODO: Move this into version_callback and version_arguments.
-    'files' => array(
-      'php' => array(
-        'getid3.php',
-      ),
-    ),
-  );
-  return $libraries;
-}
+// function getid3_libraries_info() {
+//   $libraries['getid3'] = array(
+//     'name' => 'getID3',
+//     'vendor url' => 'http://www.getid3.org',
+//     'download url' => 'http://sourceforge.net/projects/getid3/files/getID3%28%29%201.x/1.9.9/getID3-1.9.9-20141218.zip/download',
+//     'path' => 'getid3',
+//     'version' => '1.9.9', // @TODO: Move this into version_callback and version_arguments.
+//     'files' => array(
+//       'php' => array(
+//         'getid3.php',
+//       ),
+//     ),
+//   );
+//   return $libraries;
+// }
 
 
 /**
@@ -72,39 +72,29 @@ function getid3_libraries_info() {
  * @return
  *   Boolean indicating if the library was successfully loaded.
  */
-function getid3_load($display_warning = TRUE) {
-  // Ensure the getID3() library is loaded.
-  $library = libraries_detect('getid3');
-  if ($library['installed']) {
-    libraries_load('getid3');
-    return TRUE;
-  }
-  return FALSE;
-}
+// function getid3_load($display_warning = TRUE) {
+//   // Ensure the getID3() library is loaded.
+//   $library = libraries_detect('getid3');
+//   if ($library['installed']) {
+//     libraries_load('getid3');
+//     return TRUE;
+//   }
+//   return FALSE;
+// }
 
 /**
  * Create and initialize an instance of getID3 class.
  */
 function getid3_instance() {
   $id3 = NULL;
-  if (getid3_load()) {
+  // if (getid3_load()) {
     $id3 = new getID3();
     // MD5 is a big performance hit. Disable it by default.
     $id3->option_md5_data = FALSE;
     $id3->option_md5_data_source = FALSE;
     $id3->encoding = 'UTF-8';
-  }
+  // }
   return $id3;
-}
-
-function getid3_calc($word) {
-  $m = 1;
-  $int = 0;
-  for ($i=strlen($word)-1;$i>-1;$i--) {
-      $int +=$m*ord($word[$i]);
-      $m=$m*128;
-      }
-  return $int;
 }
 
 /**
@@ -115,27 +105,13 @@ function getid3_calc($word) {
 function getid3_analyze_file($file) {
   // Initialize
   $getID3 = getid3_instance();
+  $file_realpath = backdrop_realpath($file->uri);
 
-  $file_realpath = drupal_realpath($file->uri);
   // Verify file exists, as external files are saved as managed files
   // Ex: this prevents errors on media_youtube or media_vimeo entries.
   if (file_exists($file_realpath)) {
     // Analyze.
     return $getID3->analyze($file_realpath);
-  }
-
-  // If the file path isn't local
-  if ($file_realpath === FALSE){
-    $file_urlpath = file_create_url($file->uri);
-    $tmp = file_directory_temp() . '/' . $file->filename;
-
-    if (file_put_contents($tmp, file_get_contents($file_urlpath, false, null, 0, 10))) {
-      $tagLen = getid3_calc(substr($tmp,6,4));
-      unlink($tmp);
-
-      file_put_contents($tmp, file_get_contents($file_urlpath, false, null, 0, $tagLen));
-      return $getID3->analyze($tmp);
-    }
   }
 
   return NULL;
@@ -218,10 +194,10 @@ function getid3_perform_batch_process() {
  */
 function getid3_perform_batch_process_complete($success, $results, $operations) {
   if ($success) {
-    drupal_set_message(t('File entity ID3 data updated @count files successfully.', array('@count' => count($results))));
+    backdrop_set_message(t('File entity ID3 data updated @count files successfully.', array('@count' => count($results))));
   }
   else {
-    drupal_set_message(theme('item_list', array('items' => $results['errors'])), 'error');
+    backdrop_set_message(theme('item_list', array('items' => $results['errors'])), 'error');
   }
 }
 
@@ -234,10 +210,10 @@ function getid3_perform_batch_process_complete($success, $results, $operations) 
 function getid3_analyze_existing_files(&$context) {
   // Little workaround so update hook and can use same batch.
   if (isset($context['sandbox'])) {
-    $sandbox =& $context['sandbox'];
+    $sandbox = &$context['sandbox'];
   }
   else {
-    $sandbox =& $context;
+    $sandbox = &$context;
   }
 
   // Lets update 10 files at a time.
@@ -282,7 +258,7 @@ function getid3_analyze_existing_files(&$context) {
 function getid3_views_api() {
   return array(
     'api' => 3.0,
-    'path' => drupal_get_path('module', 'getid3') . '/includes',
+    'path' => backdrop_get_path('module', 'getid3') . '/includes',
   );
 }
 
@@ -321,4 +297,22 @@ function theme_getid3_sample_rate($variables) {
  */
 function theme_getid3_bitrate($variables) {
   return t('@bitrateKbps', array('@bitrate' => (int) ($variables['bitrate'] / 1000)));
+}
+
+/**
+ * Implements hook_autoload_info().
+ */
+function getid3_autoload_info() {
+  return array(
+    'getid3_metadata_audio_bitrate' => 'includes/handlers/getid3_metadata_audio_bitrate.inc',
+    'getid3_metadata_audio_bitrate_mode' => 'includes/handlers/getid3_metadata_audio_bitrate_mode.inc',
+    'getid3_metadata_audio_channel_mode' => 'includes/handlers/getid3_metadata_audio_channel_mode.inc',
+    'getid3_metadata_audio_format' => 'includes/handlers/getid3_metadata_audio_format.inc',
+    'getid3_metadata_audio_sample_rate' => 'includes/handlers/getid3_metadata_audio_sample_rate.inc',
+    'getid3_metadata_duration' => 'includes/handlers/getid3_metadata_duration.inc',
+    'getid3_metadata_handler' => 'includes/handlers/getid3_metadata_handler.inc',
+    'getid3_metadata_height' => 'includes/handlers/getid3_metadata_height.inc',
+    'getid3_metadata_width' => 'includes/handlers/getid3_metadata_width.inc',
+    'getID3' => 'includes/getid3/getid3.php',
+  );
 }

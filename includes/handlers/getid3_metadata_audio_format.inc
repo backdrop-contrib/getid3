@@ -5,7 +5,6 @@
  */
 class getid3_metadata_audio_format extends getid3_metadata_handler {
   function render($values) {
-    $rendered_values = parent::render($values);
-    return $this->sanitize_value($rendered_values['audio_format']);
+    return $this->sanitize_value(parent::render($values) ['audio_format']);
   }
 }
