@@ -5,14 +5,14 @@ define('GETID3_RECOMMEND_VERSION', '1.8.2');
 /**
  * Implements hook_help().
  */
-function getid3_help($section, $arg) {
-  switch ($section) {
-    case 'admin/config/media/getid3':
-      $help = '<p>' . t("To use this module you'll need to <a href='!download-link'>download the library</a> from the <a href='!info-link'>getID3 website</a> and extract the contents into the site's libraries directory. Currently, the recommended version of the getID3 library is %recommended-version.",
-        array('!download-link' => url('http://prdownloads.sourceforge.net/getid3'), '!info-link' => url('http://getid3.org/'), '%recommended-version' => GETID3_RECOMMEND_VERSION)) . '</p>';
-      return $help;
-  }
-}
+// function getid3_help($section, $arg) {
+//   switch ($section) {
+//     case 'admin/config/media/getid3':
+//       $help = '<p>' . t("To use this module you'll need to <a href='!download-link'>download the library</a> from the <a href='!info-link'>getID3 website</a> and extract the contents into the site's libraries directory. Currently, the recommended version of the getID3 library is %recommended-version.",
+//         array('!download-link' => url('http://prdownloads.sourceforge.net/getid3'), '!info-link' => url('http://getid3.org/'), '%recommended-version' => GETID3_RECOMMEND_VERSION)) . '</p>';
+//       return $help;
+//   }
+// }
 
 /**
  * Implements hook_menu().
@@ -49,21 +49,21 @@ function getid3_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_libraries_info().
  */
-function getid3_libraries_info() {
-  $libraries['getid3'] = array(
-    'name' => 'getID3',
-    'vendor url' => 'http://www.getid3.org',
-    'download url' => 'http://sourceforge.net/projects/getid3/files/getID3%28%29%201.x/1.9.9/getID3-1.9.9-20141218.zip/download',
-    'path' => 'getid3',
-    'version' => '1.9.9', // @TODO: Move this into version_callback and version_arguments.
-    'files' => array(
-      'php' => array(
-        'getid3.php',
-      ),
-    ),
-  );
-  return $libraries;
-}
+// function getid3_libraries_info() {
+//   $libraries['getid3'] = array(
+//     'name' => 'getID3',
+//     'vendor url' => 'http://www.getid3.org',
+//     'download url' => 'http://sourceforge.net/projects/getid3/files/getID3%28%29%201.x/1.9.9/getID3-1.9.9-20141218.zip/download',
+//     'path' => 'getid3',
+//     'version' => '1.9.9', // @TODO: Move this into version_callback and version_arguments.
+//     'files' => array(
+//       'php' => array(
+//         'getid3.php',
+//       ),
+//     ),
+//   );
+//   return $libraries;
+// }
 
 
 /**
@@ -72,28 +72,28 @@ function getid3_libraries_info() {
  * @return
  *   Boolean indicating if the library was successfully loaded.
  */
-function getid3_load($display_warning = TRUE) {
-  // Ensure the getID3() library is loaded.
-  $library = libraries_detect('getid3');
-  if ($library['installed']) {
-    libraries_load('getid3');
-    return TRUE;
-  }
-  return FALSE;
-}
+// function getid3_load($display_warning = TRUE) {
+//   // Ensure the getID3() library is loaded.
+//   $library = libraries_detect('getid3');
+//   if ($library['installed']) {
+//     libraries_load('getid3');
+//     return TRUE;
+//   }
+//   return FALSE;
+// }
 
 /**
  * Create and initialize an instance of getID3 class.
  */
 function getid3_instance() {
   $id3 = NULL;
-  if (getid3_load()) {
+  // if (getid3_load()) {
     $id3 = new getID3();
     // MD5 is a big performance hit. Disable it by default.
     $id3->option_md5_data = FALSE;
     $id3->option_md5_data_source = FALSE;
     $id3->encoding = 'UTF-8';
-  }
+  // }
   return $id3;
 }
 
@@ -313,5 +313,6 @@ function getid3_autoload_info() {
     'getid3_metadata_handler' => 'includes/handlers/getid3_metadata_handler.inc',
     'getid3_metadata_height' => 'includes/handlers/getid3_metadata_height.inc',
     'getid3_metadata_width' => 'includes/handlers/getid3_metadata_width.inc',
+    'getID3' => 'includes/getid3/getid3.php',
   );
 }

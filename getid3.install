@@ -7,35 +7,36 @@
 /**
  * Implements hook_requirements().
  */
-function getid3_requirements($phase) {
-  $t = get_t();
-  $requirements = array();
+// function getid3_requirements($phase) {
+//   dpm($phase);
+//   $t = get_t();
+//   $requirements = array();
 
-  if ($phase == 'runtime') {
-    $requirements['getID3'] = array(
-      'title' => $t('getID3() PHP Library'),
-      'value' => $t('The getID3() library is present'),
-      'severity' => REQUIREMENT_ERROR,
-    );
+//   if ($phase == 'runtime') {
+//     $requirements['getID3'] = array(
+//       'title' => $t('getID3() PHP Library'),
+//       'value' => $t('The getID3() library is present'),
+//       'severity' => REQUIREMENT_ERROR,
+//     );
 
-    // Detect the library
-    if (module_exists('libraries')) {
-      $library = libraries_detect('getid3');
+//     // Detect the library
+//     // if (module_exists('libraries')) {
+//     //   $library = libraries_detect('getid3');
 
-      if ($library['installed']) {
-        $requirements['getID3']['severity'] = REQUIREMENT_OK;
-      }
-      elseif (isset($library['error']) && !empty($library['error'])) {
-        $requirements['getID3']['description'] = $library['error message'];
-      }
-    }
-    else {
-      $requirements['getID3']['description'] = t('The getID3() module now requires Libraries.');
-    }
-  }
+//     //   if ($library['installed']) {
+//     //     $requirements['getID3']['severity'] = REQUIREMENT_OK;
+//     //   }
+//     //   elseif (isset($library['error']) && !empty($library['error'])) {
+//     //     $requirements['getID3']['description'] = $library['error message'];
+//     //   }
+//     // }
+//     // else {
+//     //   $requirements['getID3']['description'] = t('The getID3() module now requires Libraries.');
+//     // }
+//   }
 
-  return $requirements;
-}
+//   return $requirements;
+// }
 
 /**
  * Implements hook_install().
