@@ -5,6 +5,6 @@
  */
 class getid3_metadata_audio_channel_mode extends getid3_metadata_handler {
   function render($values) {
-    return $this->sanitize_value(parent::render($values)['audio_channel_mode']);
+    return $this->sanitize_value(parent::render($values) ['audio_channel_mode']);
   }
 }

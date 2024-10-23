@@ -5,6 +5,6 @@
  */
 class getid3_metadata_duration extends getid3_metadata_handler {
   function render($values) {
-    return $this->sanitize_value(parent::render($values)['duration']);
+    return $this->sanitize_value(parent::render($values) ['duration']);
   }
 }

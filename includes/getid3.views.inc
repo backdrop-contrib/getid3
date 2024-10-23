@@ -5,7 +5,7 @@
  */
 
 /**
- * Implements hook_views_data()
+ * Implements hook_views_data().
  */
 function getid3_views_data() {
   $data['file_managed']['width'] = array(
@@ -14,7 +14,7 @@ function getid3_views_data() {
     'field' => array(
       'handler' => 'getid3_metadata_width',
       'click sortable' => TRUE,
-     ),
+    ),
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
@@ -30,7 +30,7 @@ function getid3_views_data() {
     'field' => array(
       'handler' => 'getid3_metadata_height',
       'click sortable' => TRUE,
-     ),
+    ),
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
@@ -43,11 +43,10 @@ function getid3_views_data() {
   $data['file_managed']['duration'] = array(
     'title' => t('Duration'),
     'help' => t('The duration of audio or video files, in seconds.'),
-    'real field' => 'fid',
     'field' => array(
       'handler' => 'getid3_metadata_duration',
       'click sortable' => TRUE,
-     ),
+    ),
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
@@ -79,7 +78,7 @@ function getid3_views_data() {
     'field' => array(
       'handler' => 'getid3_metadata_audio_sample_rate',
       'click sortable' => TRUE,
-     ),
+    ),
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
@@ -111,7 +110,7 @@ function getid3_views_data() {
     'field' => array(
       'handler' => 'getid3_metadata_audio_bitrate',
       'click sortable' => TRUE,
-     ),
+    ),
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
@@ -127,7 +126,7 @@ function getid3_views_data() {
     'field' => array(
       'handler' => 'getid3_metadata_audio_bitrate_mode',
       'click sortable' => TRUE,
-     ),
+    ),
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
