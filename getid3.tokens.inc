@@ -54,7 +54,7 @@ function getid3_token_info() {
  * Implements hook_tokens().
  */
 function getid3_tokens($type, $tokens, array $data = array(), array $options = array()) {
-  $language_code = isset($options['language']) ? $options['language']->language : NULL;
+  $language_code = isset($options['language']) ? $options['language']->langcode: NULL; // why is this not being used?
   $sanitize = !empty($options['sanitize']);
 
   $replacements = array();
